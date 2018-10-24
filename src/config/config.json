@@ -1,0 +1,10 @@
+{
+  "verbose": true,
+  "debug": false,
+  "sqlDebug": false,
+  "dbName": "sauron.sqlite",
+  "neo4jHost": "127.0.0.1",
+  "neo4jPort": "7687",
+  "neo4jUser": "neo4j",
+  "neo4jPassword": "neo4j"
+}

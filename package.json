@@ -1,0 +1,23 @@
+{
+  "name": "sauron",
+  "version": "0.0.0",
+  "description": "",
+  "main": "sauron.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "app-root-path": "^2.1.0",
+    "bluebird": "^3.5.2",
+    "bookshelf": "^0.13.3",
+    "knex": "^0.15.2",
+    "lodash": "^4.17.11",
+    "neo4j-driver": "^1.6.3",
+    "prompts": "^1.1.1",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
+    "sqlite3": "^4.0.2"
+  }
+}
