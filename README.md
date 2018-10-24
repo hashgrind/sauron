@@ -9,6 +9,10 @@ Sauron is a graph data ingestion tool that currently includes a bit of reddit. T
 3. Edit `src/config/config.json`
 4. `node sauron.js`
 
+## Tips
+
+You might find it helpful to run `create index on :Account(name)` and `create index on :Subreddit(name)` to speed things up.
+
 ## Known issues
 
 * Everything
