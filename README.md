@@ -1,6 +1,6 @@
 # sauron
 
-Sauron is a graph data ingestion tool that currently includes a bit of reddit. This was hacked together pretty quickly, so don't be surprised if it kinda sucks/makes your beard catch fire. No guarantees about anything. In fact, you probably shouldn't even use this.
+Sauron is a graph data ingestion tool designed for social engineering and casual mass surveillance. It is very much still in development.
 
 ## Installation
 
@@ -11,16 +11,17 @@ Sauron is a graph data ingestion tool that currently includes a bit of reddit. T
 
 ## Tips
 
-You might find it helpful to run `create index on :Account(name)` and `create index on :Subreddit(name)` to speed things up.
+Run `create index on :Account(name)` and `create index on :Subreddit(name)` to speed neo4j up. At some point we'll just do this for you.
 
-## Known issues
+## TODO
 
-* Everything
-* The UI mixed with console output is glitchy and sucks
-* Resource leakage or other tomfoolery requiring exits after doing a lot of shit
-* Most things could probably be done better
+* Console output + prompts display conflict cleanup
+* Automatically apply graph indexes
+* Cypher query generator
+* Do even more with the Reddit data we get
+* Expand beyond Reddit to include other delicious data trails
 
-## Interesting queries
+## Interesting Queries
 
 TODO/try harder ;)
 
