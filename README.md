@@ -20,6 +20,8 @@ Run `create index on :Account(name)` and `create index on :Subreddit(name)` to s
 * Cypher query generator
 * Do even more with the Reddit data we get
 * Expand beyond Reddit to include other delicious data trails
+* Handle failure on nonexistent subreddits being entered
+* Restructure application to suck less and be maintainable
 
 ## Interesting Queries
 

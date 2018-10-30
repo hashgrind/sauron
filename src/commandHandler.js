@@ -21,6 +21,37 @@
 			.catch(console.error);
 	}
 
+	async function getRecursively(url, depth, chain, after) {
+		if (!chain) chain = [];
+
+		if (depth < 1) return Promise.resolve(chain);
+
+		return get(url + (after ? '?after=' + after : '')).then((o) => {
+			if (o && o.data) {
+				chain.push(o);
+				return getRecursively(url, depth - 1, chain, o.data.after);
+			} else {
+				// Failure; resolve early
+				return Promise.resolve(chain);
+			}
+		});
+	}
+
+	async function getRecursivelyRedditObjectData(url, depth) {
+		return getRecursively(url, depth, null, null)
+			.then((coll) => {
+				let yO = { children: [] };
+
+				_.forEach(coll, (collC) => {
+					_.forEach(collC.data.children, (c) => {
+						yO.children.push(c);
+					});
+				});
+
+				return yO;
+			});
+	}
+
 	async function getRedditObject(url) {
 		return get(url)
 			.then((obj) => {
@@ -47,7 +78,7 @@
 			case 'specific_user': {
 				if (ignoreUsers.indexOf(opts.argument) > -1) return Promise.resolve();
 
-				return getRedditObjectData('https://www.reddit.com/user/' + opts.argument + '/.json')
+				return getRecursivelyRedditObjectData('https://www.reddit.com/user/' + opts.argument + '/.json', 4)
 					.then((userData) => {
 						let accountName = opts.argument.toLowerCase();
 
@@ -86,7 +117,7 @@
 					});
 			}
 			case 'specific_subreddit': {
-				return getRedditObjectData('https://www.reddit.com/r/' + opts.argument + '/.json')
+				return getRecursivelyRedditObjectData('https://www.reddit.com/r/' + opts.argument + '/.json', 1)
 					.then((subredditData) => {
 						let subredditName = opts.argument.toLowerCase();
 
