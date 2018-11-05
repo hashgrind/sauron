@@ -282,6 +282,16 @@
 									exports.runCommand('specific_subreddit', { argument: s.toLowerCase() })
 								);
 							});
+						})
+						.then(() => {
+							graphDb.getTopSharedInterestSubredditsNearSubreddit(stalkCmds.which.toLowerCase(), limit)
+								.then((res) => {
+									_.forEach(res, (s) => {
+										promiseChain.push(
+											exports.runCommand('specific_subreddit', { argument: s.toLowerCase() })
+										);
+									});
+								})
 						});
 
 					return Promise.each(promiseChain, (prom) => prom);
