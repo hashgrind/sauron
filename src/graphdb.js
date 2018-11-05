@@ -114,6 +114,15 @@
 			})
 	};
 
+	exports.getRandomSharedInterestSubredditsNearSubreddit = async function (subreddit, limit) {
+		return sessionBoundCypher("match (s0:Subreddit {name: $name})--(a:Account)--(s1:Subreddit) where s0 <> s1 with distinct a.name as account, s1.name as sub with sub, collect(account) as accounts with sub, accounts, size(accounts) as numAccounts where not sub in [ 'askreddit', 'announcements', 'funny', 'pics', 'todayilearned', 'science', 'iama', 'blog', 'videos', 'worldnews', 'gaming', 'movies', 'music', 'aww', 'news', 'gifs', 'askscience', 'explainlikeimfive', 'earthporn', 'books', 'television', 'lifeprotips', 'sports', 'diy', 'showerthoughts', 'space', 'jokes', 'tifu', 'food', 'photoshopbattles', 'art', 'internetisbeautiful', 'mildlyinteresting', 'getmotivated', 'history', 'nottheonion', 'gadgets', 'dataisbeautiful', 'futurology', 'documentaries', 'listentothis', 'personalfinance', 'philosophy', 'nosleep', 'creepy', 'oldschoolcool', 'upliftingnews', 'writingprompts', 'twoxchromosomes'] and numAccounts > 1 return sub order by randomUUID() limit $limit", { name: subreddit, limit: limit })
+			.then((results) => {
+				if (results && results.records && results.records.length > 0) {
+					return _.map(results.records, (rec) => rec.get('sub'));
+				} else return Promise.resolve();
+			})
+	};
+
 	exports.getGrowthPotentialSubreddits = async function (limit) {
 		return sessionBoundCypher("match (s:Subreddit)--(a:Account)--(s2:Subreddit) where s2 <> s with s.name as subreddit, count(distinct s2) as subsReached, count(distinct a) as accounts with subreddit, subsReached, accounts, toFloat(subsReached)/toFloat(accounts) as reachRatio where accounts > 0 return subreddit as name order by reachRatio desc, subsReached desc, accounts desc limit $limit", { limit: limit })
 			.then((results) => {
