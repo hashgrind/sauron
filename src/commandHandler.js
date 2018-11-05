@@ -187,6 +187,7 @@
 						choices: [
 							{ title: 'User Stalk', value: 'user_stalk' },
 							{ title: 'Subreddit Stalk', value: 'subreddit_stalk' },
+							{ title: 'Subreddit Interest Stalk', value: 'subreddit_interest_stalk' },
 							{ title: 'Graph-Based Growth', value: 'graph_smart_grow' },
 							{ title: 'Link-Based Growth', value: 'link_grow' },
 							{ title: 'Curiosity-Based Growth', value: 'viagra' },
@@ -207,7 +208,7 @@
 
 				let stalkCmds = null;
 				if (opts && opts.which) stalkCmds = opts.which;
-				if (!stalkCmds) if (subOpts.mode === 'user_stalk' || subOpts.mode === 'subreddit_stalk') stalkCmds = await prompts({
+				if (!stalkCmds) if (subOpts.mode === 'user_stalk' || subOpts.mode === 'subreddit_stalk' || subOpts.mode === 'subreddit_interest_stalk') stalkCmds = await prompts({
 					type: 'text',
 					name: 'which',
 					message: 'Which?'
@@ -264,16 +265,23 @@
 										);
 									});
 								});
-						})
-						.then(() => {
-							graphDb.getRandomSharedInterestSubredditsNearSubreddit(stalkCmds.which.toLowerCase(), limit)
-								.then((res) => {
-									_.forEach(res, (s) => {
-										promiseChain.push(
-											exports.runCommand('specific_subreddit', { argument: s.toLowerCase() })
-										);
-									});
-								});
+						});
+
+					return Promise.each(promiseChain, (prom) => prom);
+				} else if (subOpts.mode === 'subreddit_interest_stalk') {
+					let limit = 10;
+					if (subOpts.aggression === 'yolo') limit = 25;
+					else if (subOpts.aggression === 'fuckit') limit = 100;
+
+					let promiseChain = [];
+
+					graphDb.getRandomSharedInterestSubredditsNearSubreddit(stalkCmds.which.toLowerCase(), limit)
+						.then((res) => {
+							_.forEach(res, (s) => {
+								promiseChain.push(
+									exports.runCommand('specific_subreddit', { argument: s.toLowerCase() })
+								);
+							});
 						});
 
 					return Promise.each(promiseChain, (prom) => prom);
@@ -374,6 +382,9 @@
 						})
 						.then(() => {
 							exports.runCommand('grow', { subOpts: { mode: 'subreddit_stalk', aggression: 'fuckit' }, which: { which: opts.argument.toLowerCase() } })
+						})
+						.then(() => {
+							exports.runCommand('grow', { subOpts: { mode: 'subreddit_interest_stalk', aggression: 'fuckit' }, which: { which: opts.argument.toLowerCase() } })
 						})
 				];
 
